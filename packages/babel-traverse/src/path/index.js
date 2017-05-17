@@ -7,6 +7,7 @@ import traverse from "../index";
 import Scope from "../scope";
 import * as t from "babel-types";
 import { path as pathCache } from "../cache";
+import {log} from "../log"
 
 // NodePath is split across many files.
 import * as NodePath_ancestry from "./ancestry";
@@ -110,6 +111,7 @@ export default class NodePath {
     // we're entering a new scope so let's construct it!
     if (this.isScope()) {
       ourScope = new Scope(this, scope);
+      log('(create scope)')
     }
 
     return ourScope;

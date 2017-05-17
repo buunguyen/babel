@@ -1,6 +1,7 @@
 // This file contains methods responsible for maintaining a TraversalContext.
 
 import traverse from "../index";
+import {log} from "../log"
 
 export function call(key): boolean {
   const opts = this.opts;
@@ -57,14 +58,17 @@ export function visit(): boolean {
     return false;
   }
 
+  log('..invoke enter')
   if (this.call("enter") || this.shouldSkip) {
     this.debug(() => "Skip...");
+    log('..skip')
     return this.shouldStop;
   }
 
   this.debug(() => "Recursing into...");
+  log('..recurse')
   traverse.node(this.node, this.opts, this.scope, this.state, this, this.skipKeys);
-
+  log('..invoke exit')
   this.call("exit");
 
   return this.shouldStop;

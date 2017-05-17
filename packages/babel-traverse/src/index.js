@@ -4,6 +4,7 @@ import * as messages from "babel-messages";
 import includes from "lodash/includes";
 import * as t from "babel-types";
 import * as cache from "./cache";
+import {log, inc, dec} from "./log"
 
 export { default as NodePath } from "./path";
 export { default as Scope } from "./scope";
@@ -55,9 +56,20 @@ traverse.node = function (
   if (!keys) return;
 
   const context = new TraversalContext(scope, opts, state, parentPath);
+  log('% new ctx', context.id);
+
   for (const key of keys) {
     if (skipKeys && skipKeys[key]) continue;
-    if (context.visit(node, key)) return;
+
+    log('start', node.type, key, node.id);
+    inc();
+    if (context.visit(node, key)) {
+      log('end', node.type, key);
+      dec();
+      return;
+    }
+    dec();
+    log('end', node.type, key);
   }
 };
 
